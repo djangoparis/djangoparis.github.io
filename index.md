@@ -19,6 +19,11 @@ Ce groupe à pour but de réunir les djangonautes autour de Paris afin d'échang
 
 Pas besoin d'être un expert en Django, tout le monde est le bienvenu.
 
+-----
+
+Follow us on Twitter: [@dj_paris_meetup](https://twitter.com/dj_paris_meetup)
+Email us: djangoparis.meetup@gmail.com
+
 ## Code of conduct
 
 Available soon.
