@@ -1,7 +1,7 @@
 # Django Paris
 
 Official website for Django Paris meetups.
-Find more information about next meetings by visiting the [Django Paris meetup page](https://www.meetup.com/fr-FR/django-meetup-paris/).
+Find more information about next meetings by visiting the [Django Paris meetup page](https://www.meetup.com/fr-FR/django-paris/).
 
 ## About
 
@@ -29,7 +29,7 @@ Email us: djangoparis.meetup@gmail.com
 
 ### Be Awesome to Each Other
 
-The mission of The [Paris Django Meetup Group](https://www.meetup.com/fr-FR/django-meetup-paris/) is to provide fun, welcoming and professional environments so that diverse groups of people - regardless of age, race, gender identity or expression, background, disability, appearance, sexuality, walk of life, or religion - can get together to learn from and be inspired by each other about all things related to Django, the high-level Python Web framework.
+The mission of The [Paris Django Meetup Group](https://www.meetup.com/fr-FR/django-paris/) is to provide fun, welcoming and professional environments so that diverse groups of people - regardless of age, race, gender identity or expression, background, disability, appearance, sexuality, walk of life, or religion - can get together to learn from and be inspired by each other about all things related to Django, the high-level Python Web framework.
 
 The Paris Django Meetup Group asks all our members, speakers, volunteers, attendees and guests to adopt the following principles to help us with our mission. We are a diverse community. Sometimes this means we need to work harder to ensure we’re creating an environment of trust and respect where all who come to participate feel comfortable and included. We value your participation and appreciate your help in realising this goal.
 
@@ -51,7 +51,7 @@ If presenters are unsure whether their material is suitable, they are encouraged
 
 ### Be Aware
 
-We ask everyone to be aware that we will not tolerate intimidation, harassment, or any abusive, discriminatory, or derogatory behaviour by anyone at any event, or online. Complaints can be made to the [meetup organisers](https://www.meetup.com/fr-FR/django-meetup-paris/members/?op=leaders) either face to face at a meetup, or via the Meetup website. Any complaints made to event organisers will remain confidential, be taken seriously, and be treated appropriately with discretion. Should an event organiser consider it appropriate, the complainee may be:
+We ask everyone to be aware that we will not tolerate intimidation, harassment, or any abusive, discriminatory, or derogatory behaviour by anyone at any event, or online. Complaints can be made to the [meetup organisers](https://www.meetup.com/fr-FR/django-paris/members/?op=leaders) either face to face at a meetup, or via the Meetup website. Any complaints made to event organisers will remain confidential, be taken seriously, and be treated appropriately with discretion. Should an event organiser consider it appropriate, the complainee may be:
 
 - told to apologise
 - told to stop/modify their behaviour appropriately
@@ -81,7 +81,7 @@ All participants, including event attendees and speakers, must not engage in any
 
 ### Questions?
 
-If you’re not sure about anything you’ve just read please contact the [Meetup organisers](https://www.meetup.com/fr-FR/django-meetup-paris/members/?op=leaders). You can message us through the [Meetup page](https://www.meetup.com/fr-FR/django-meetup-paris/).
+If you’re not sure about anything you’ve just read please contact the [Meetup organisers](https://www.meetup.com/fr-FR/django-paris/members/?op=leaders). You can message us through the [Meetup page](https://www.meetup.com/fr-FR/django-paris/).
 
 ### Credits
 
