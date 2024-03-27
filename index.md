@@ -25,6 +25,11 @@ Follow us on Twitter: [@dj_paris_meetup](https://twitter.com/dj_paris_meetup)
 Email us: djangoparis.meetup@gmail.com
 
 
+### Meetup VOD
+The records should be available in our YouTube channel:
+Django Meetup Paris -> https://www.youtube.com/@DjangoMeetupParis-gj1xh
+
+
 ## Code of conduct
 
 ### Be Awesome to Each Other
