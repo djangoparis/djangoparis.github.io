@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="src/css/reset.css">
+    <link rel="stylesheet" href="src/css/reveal.css">
+    <link rel="stylesheet" href="src/css/theme/black.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="src/highlight/monokai.css">
+
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h1>Django channels</h1>
+            <p>Qu’est-ce que c’est ?</p>
+        </section>
+        <section>
+            <h2>Qui suis-je ?</h2>
+
+
+                <!-- Card start -->
+                <div class="max-w-sm mx-auto bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-lg ">
+                    <div class="border-b px-4 pb-6">
+                        <div class="text-center my-4">
+                            <img class="h-32 w-32 rounded-full border-4 border-white dark:border-gray-800 !mx-auto my-4"
+                                 src="./img/moi.jpeg" alt="">
+                            <div class="py-2">
+                                <div class="font-bold text-2xl text-gray-800 dark:text-white mb-1">Paul Guichon</div>
+                                <div class="font-bold text-2xl text-gray-800 dark:text-white mb-1">Co-Fondateur de Biru</div>
+                                 <ul>
+                                <li class="text-2xl text-gray-800 dark:text-white">pguichon@biru.sh</li>
+                                <li class="text-2xl text-gray-800 dark:text-white">https://biru.sh</li>
+                            </ul>
+
+                            </div>
+                            <img class="!mx-auto my-4" src="./img/biru_logo.png" alt="">
+                        </div>
+
+                    </div>
+
+                </div>
+
+        </section>
+        <section>
+            <h3>Django Channel : qu'est-ce qu'il faut pour le faire fonctionner</h3>
+            <ul>
+                <li class="fragment">Un server ASGI</li>
+                <li class="fragment">La librairie django-channel</li>
+                <li class="fragment">Un redis [Optionnel]</li>
+                <li class="fragment">Un reverse proxy </li>
+            </ul>
+        </section>
+        <section>
+            <h3>ASGI ?</h3>
+            <div class="text-2xl">User
+ASGI is structured as a single, asynchronous callable. It takes a scope, which is a dict containing details about the specific connection, send, an asynchronous callable, that lets the application send event messages to the client, and receive, an asynchronous callable which lets the application receive event messages from the client.</div>
+           <pre>
+               <code data-trim data-noescape>
+                   async def application(scope, receive, send):
+                        event = await receive()
+                        ...
+                        await send({"type": "websocket.send", ...})
+           </code></pre>
+            <a href="https://asgi.readthedocs.io/en/latest/introduction.html">https://asgi.readthedocs.io/en/latest/introduction.html</a>
+        </section>
+        <section>
+            <h3>Et Django-channel ?</h3>
+            Channels wraps Django’s native asynchronous view support, allowing Django projects to handle not only HTTP, but protocols that require long-running connections too - WebSockets, MQTT, chatbots, amateur radio, and more.
+            <a href="https://channels.readthedocs.io/en/latest/introduction.html">https://channels.readthedocs.io/en/latest/introduction.html</a>
+        </section>
+        <section>
+            <h3>Mais comment ça marche ?</h3>
+            <ul>
+                <li class="fragment">Routing</li>
+                <li class="fragment">Consumers</li>
+                <li class="fragment">Channel Layers</li>
+
+            </ul>
+        </section>
+        <section>
+            <h3>Routing</h3>
+            <pre><code data-trim data-noescape>
+                <script type="text/template">
+                application = ProtocolTypeRouter({
+                # Django's ASGI application to handle traditional HTTP requests
+                "http": django_asgi_app,
+
+                # WebSocket chat handler
+                "websocket":
+                    URLRouter([
+                       path("chat/<username>/", AdminChatConsumer.as_asgi()),
+                       path("chat/", PublicChatConsumer.as_asgi()),
+                    ])
+                })
+                </script></code></pre>
+        </section>
+        <section>
+            <h3>Consumers</h3>
+            <pre><code data-trim data-noescape>
+                from channels.consumer import SyncConsumer
+
+                class EchoConsumer(SyncConsumer):
+
+                    def websocket_connect(self, event):
+                        self.send({
+                            "type": "websocket.accept",
+                        })
+
+                    def websocket_receive(self, event):
+                        self.send({
+                            "type": "websocket.send",
+                            "text": event["text"],
+                        })
+            </code></pre>
+        </section>
+        <section>
+            <h3>C'est tout</h3>
+            <p>Hormis les outils pour décomplexifier l'ASGI, il n'y a rien d'autre</p>
+            <p class="fragment">Dur d'écrire des gros programmes à l'intérieur de django-channel</p>
+        </section>
+        <section>
+            <h3>Channel Layers</h3>
+            <ul>
+                <li class="fragment">Il faut redis</li>
+                <li class="fragment">L'application devient distribuée</li>
+                <li class="fragment">On peut communiquer avec django-channel hors websocket en passant par redis</li>
+            </ul>
+        </section>
+        <section>
+            <pre><code data-trim data-noescape class="!max-h-screen" data-line-numbers="5-6|8-9|11-18|20-22">
+                from asgiref.sync import async_to_sync
+
+                class ChatConsumer(WebsocketConsumer):
+
+                    def connect(self):
+                        async_to_sync(self.channel_layer.group_add)("chat", self.channel_name)
+
+                    def disconnect(self, close_code):
+                        async_to_sync(self.channel_layer.group_discard)("chat", self.channel_name)
+
+                    def receive(self, text_data):
+                        async_to_sync(self.channel_layer.group_send)(
+                            "chat",
+                            {
+                                "type": "chat.message",
+                                "text": text_data,
+                            },
+                        )
+
+                    def chat_message(self, event):
+                        self.send(text_data=event["text"])
+            </code></pre>
+        </section>
+        <section>
+            <h3>Celery</h3>
+            <p>Gestionnaire de tache asynchrone</p>
+            <ul>
+                <li>Fonctionne clé en main avec django</li>
+                <li>Fonctionne avec Redis</li>
+            </ul>
+        </section>
+        <section>
+            <pre><code data-trim data-noescape>
+                @app.task
+                def coucou(username: str):
+                    async_to_sync(channel_layer.group_send)(
+                        f"{username}",
+                        {"type": "coucou.message", "message": "coucou"},
+                    )
+            </code></pre>
+            <pre><code data-trim data-noescape data-line-numbers="3">
+                @router.post("/coucou")
+                def coucou_url(request):
+                    coucou.delay(generated_file.id, request.user.username)
+                    return 'ok'
+            </code></pre>
+        </section>
+        <section>
+            <h1>Demo</h1>
+        </section>
+        <section>
+            <h1>Merci</h1>
+            <ul><li>https://gitlab.biru.sh/biru/presentation/meetup</li></ul>
+        </section>
+        <section>Questions ?</section>
+    </div>
+</div>
+
+<script src="src/reveal.js"></script>
+<script src="src/highlight/highlight.js"></script>
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+         width: 960,
+        height: 700,
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealHighlight]
+    });
+</script>
+<script src="src/tailwind.js"></script>
+</body>
+</html>
